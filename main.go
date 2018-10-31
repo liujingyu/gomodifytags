@@ -59,7 +59,7 @@ type config struct {
 	addOptions []string
 	override   bool
 
-	transform   string
+	transform   map[string]string
 	sort        bool
 	clear       bool
 	clearOption bool
@@ -98,9 +98,9 @@ func realMain() error {
 		flagAddTags = flag.String("add-tags", "",
 			"Adds tags for the comma separated list of keys."+
 				"Keys can contain a static value, i,e: json:foo")
-		flagOverride  = flag.Bool("override", false, "Override current tags when adding tags")
-		flagTransform = flag.String("transform", "snakecase",
-			"Transform adds a transform rule when adding tags."+
+		flagOverride     = flag.Bool("override", false, "Override current tags when adding tags")
+		flagAddTransform = flag.String("transform", "snakecase",
+			"Transform adds a transform rule for each tags when adding tags."+
 				" Current options: [snakecase, camelcase, lispcase]")
 		flagSort = flag.Bool("sort", false,
 			"Sort sorts the tags in increasing order according to the key name")
@@ -134,7 +134,6 @@ func realMain() error {
 		write:       *flagWrite,
 		clear:       *flagClearTags,
 		clearOption: *flagClearOptions,
-		transform:   *flagTransform,
 		sort:        *flagSort,
 		override:    *flagOverride,
 	}
@@ -157,6 +156,26 @@ func realMain() error {
 
 	if *flagRemoveOptions != "" {
 		cfg.removeOptions = strings.Split(*flagRemoveOptions, ",")
+	}
+
+	if *flagAddTransform != "" {
+		cfg.transform = make(map[string]string)
+		if !strings.Contains(*flagAddTransform, ",") {
+			for _, tag := range cfg.add {
+				cfg.transform[tag] = *flagAddTransform
+			}
+		} else {
+			transforms := strings.Split(*flagAddTransform, ",")
+			if len(transforms) != len(cfg.add) {
+				fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+				flag.PrintDefaults()
+				return nil
+			}
+			for k, tag := range cfg.add {
+				cfg.transform[tag] = transforms[k]
+			}
+		}
+
 	}
 
 	err := cfg.validate()
@@ -346,49 +365,51 @@ func (c *config) addTags(fieldName string, tags *structtag.Tags) (*structtag.Tag
 	}
 
 	splitted := camelcase.Split(fieldName)
-	name := ""
-
-	unknown := false
-	switch c.transform {
-	case "snakecase":
-		var lowerSplitted []string
-		for _, s := range splitted {
-			lowerSplitted = append(lowerSplitted, strings.ToLower(s))
-		}
-
-		name = strings.Join(lowerSplitted, "_")
-	case "lispcase":
-		var lowerSplitted []string
-		for _, s := range splitted {
-			lowerSplitted = append(lowerSplitted, strings.ToLower(s))
-		}
-
-		name = strings.Join(lowerSplitted, "-")
-	case "camelcase":
-		var titled []string
-		for _, s := range splitted {
-			titled = append(titled, strings.Title(s))
-		}
-
-		titled[0] = strings.ToLower(titled[0])
-
-		name = strings.Join(titled, "")
-	case "pascalcase":
-		var titled []string
-		for _, s := range splitted {
-			titled = append(titled, strings.Title(s))
-		}
-
-		name = strings.Join(titled, "")
-	default:
-		unknown = true
-	}
+	overrideName := ""
 
 	for _, key := range c.add {
-		splitted = strings.Split(key, ":")
-		if len(splitted) == 2 {
-			key = splitted[0]
-			name = splitted[1]
+
+		name := ""
+		unknown := false
+		switch c.transform[key] {
+		case "snakecase":
+			var lowerSplitted []string
+			for _, s := range splitted {
+				lowerSplitted = append(lowerSplitted, strings.ToLower(s))
+			}
+
+			name = strings.Join(lowerSplitted, "_")
+		case "lispcase":
+			var lowerSplitted []string
+			for _, s := range splitted {
+				lowerSplitted = append(lowerSplitted, strings.ToLower(s))
+			}
+
+			name = strings.Join(lowerSplitted, "-")
+		case "camelcase":
+			var titled []string
+			for _, s := range splitted {
+				titled = append(titled, strings.Title(s))
+			}
+
+			titled[0] = strings.ToLower(titled[0])
+
+			name = strings.Join(titled, "")
+		case "pascalcase":
+			var titled []string
+			for _, s := range splitted {
+				titled = append(titled, strings.Title(s))
+			}
+
+			name = strings.Join(titled, "")
+		default:
+			unknown = true
+		}
+
+		splittedKey := strings.Split(key, ":")
+		if len(splittedKey) == 2 {
+			key = splittedKey[0]
+			overrideName = splittedKey[1]
 		} else if unknown {
 			// the user didn't pass any value but want to use an unknown
 			// transform. We don't return above in the default as the user
@@ -398,13 +419,20 @@ func (c *config) addTags(fieldName string, tags *structtag.Tags) (*structtag.Tag
 
 		tag, err := tags.Get(key)
 		if err != nil {
+			if overrideName != "" {
+				name = overrideName
+			}
+
 			// tag doesn't exist, create a new one
 			tag = &structtag.Tag{
 				Key:  key,
 				Name: name,
 			}
 		} else if c.override {
-			tag.Name = name
+			if overrideName == "" {
+				overrideName = name
+			}
+			tag.Name = overrideName
 		}
 
 		if err := tags.Set(tag); err != nil {

@@ -28,7 +28,7 @@ func TestRewrite(t *testing.T) {
 				add:        []string{"json"},
 				output:     "source",
 				structName: "foo",
-				transform:  "snakecase",
+				transform:  map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -37,7 +37,7 @@ func TestRewrite(t *testing.T) {
 				add:        []string{"json"},
 				output:     "source",
 				structName: "foo",
-				transform:  "snakecase",
+				transform:  map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -70,7 +70,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -79,7 +79,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,5",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 				override:  true,
 			},
 		},
@@ -89,7 +89,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,5",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -98,7 +98,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "2,8",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -107,7 +107,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "2,5",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -116,7 +116,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "5,8",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -125,7 +125,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "5,11",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -134,7 +134,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "6,7",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -160,7 +160,7 @@ func TestRewrite(t *testing.T) {
 				add:        []string{"hcl"},
 				output:     "source",
 				line:       "4,7",
-				transform:  "snakecase",
+				transform:  map[string]string{"hcl": "snakecase"},
 			},
 		},
 		{
@@ -193,7 +193,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "5,6",
-				transform: "camelcase",
+				transform: map[string]string{"json": "camelcase"},
 			},
 		},
 		{
@@ -202,7 +202,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,6",
-				transform: "lispcase",
+				transform: map[string]string{"json": "lispcase"},
 			},
 		},
 		{
@@ -211,7 +211,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,5",
-				transform: "camelcase",
+				transform: map[string]string{"json": "camelcase"},
 			},
 		},
 		{
@@ -220,7 +220,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,6",
-				transform: "camelcase",
+				transform: map[string]string{"json": "camelcase"},
 			},
 		},
 		{
@@ -237,7 +237,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				offset:    32,
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -246,7 +246,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				offset:    40,
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -255,7 +255,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				offset:    209,
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -264,7 +264,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				offset:    46,
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -273,7 +273,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				offset:    32,
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -282,7 +282,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,7",
-				transform: "snakecase",
+				transform: map[string]string{"json": "snakecase"},
 			},
 		},
 		{
@@ -291,7 +291,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,5",
-				transform: "pascalcase",
+				transform: map[string]string{"json": "pascalcase"},
 			},
 		},
 		{
@@ -300,7 +300,7 @@ func TestRewrite(t *testing.T) {
 				add:       []string{"json"},
 				output:    "source",
 				line:      "4,6",
-				transform: "pascalcase",
+				transform: map[string]string{"json": "pascalcase"},
 			},
 		},
 	}
@@ -427,7 +427,7 @@ func TestJSON(t *testing.T) {
 			// these are explicit and shouldn't be changed for this particular
 			// main test
 			ts.cfg.output = "json"
-			ts.cfg.transform = "camelcase"
+			ts.cfg.transform = map[string]string{"json": "camelcase"}
 
 			node, err := ts.cfg.parse()
 			if err != nil {
@@ -494,7 +494,7 @@ func TestModifiedRewrite(t *testing.T) {
 		add:        []string{"json"},
 		output:     "source",
 		structName: "foo",
-		transform:  "snakecase",
+		transform:  map[string]string{"json": "snakecase"},
 		file:       "struct_add_modified",
 		modified: strings.NewReader(`struct_add_modified
 55
@@ -544,7 +544,7 @@ func TestModifiedFileMissing(t *testing.T) {
 		add:        []string{"json"},
 		output:     "source",
 		structName: "foo",
-		transform:  "snakecase",
+		transform:  map[string]string{"json": "snakecase"},
 		file:       "struct_add_modified",
 		modified: strings.NewReader(`file_that_doesnt_exist
 55
