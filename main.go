@@ -144,6 +144,8 @@ func realMain() error {
 
 	if *flagAddTags != "" {
 		cfg.add = strings.Split(*flagAddTags, ",")
+	} else {
+		*flagAddTransform = ""
 	}
 
 	if *flagAddOptions != "" {
@@ -166,11 +168,7 @@ func realMain() error {
 			}
 		} else {
 			transforms := strings.Split(*flagAddTransform, ",")
-			if len(transforms) != len(cfg.add) {
-				fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-				flag.PrintDefaults()
-				return nil
-			}
+			//两者不一样以tag为主
 			for k, tag := range cfg.add {
 				cfg.transform[tag] = transforms[k]
 			}
